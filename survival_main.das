@@ -24,13 +24,13 @@ var g_images : array<Image>
 var ecs_dt : float
 var ecs_time : float
 
-let INVALID_ENTITY_ID = [[decs::EntityId]]
+//let INVALID_ENTITY_ID = [[decs::EntityId]]
 
-def operator ==(a, b: decs::EntityId implicit)
-  return a.id == b.id && a.generation == b.generation
+//def operator ==(a, b: decs::EntityId implicit)
+//  return a.id == b.id && a.generation == b.generation
 
-def operator !=(a, b: decs::EntityId implicit)
-  return a.id != b.id || a.generation != b.generation
+//def operator !=(a, b: decs::EntityId implicit)
+//  return a.id != b.id || a.generation != b.generation
 
 enum WorldObjectId : int
   hero_stand = 0
@@ -360,16 +360,13 @@ def draw_world_es(pos : float2; camera_active : bool; camera_scale : float)
 
   var screenObjects : array<tuple<pos : float2; idx : int; size : float2>>
   query() <| $ (pos : float2; image_idx : int; scale : float)
-    if image_idx == -1
-      return
-    let image & = g_images[image_idx]
-    let imageSize = float2(image.width, image.height) * scale
-    let offset = cameraPos - pos
-    if abs(offset.x) - imageSize.x / 2.0 > halfScreenWidth
-      return
-    if abs(offset.y + (offset.y < 0.0 ? imageSize.y : 0.0)) > halfScreenHeight
-      return
-    screenObjects |> emplace([[auto pos, image_idx, imageSize]])
+    if image_idx != -1
+      let image & = g_images[image_idx]
+      let imageSize = float2(image.width, image.height) * scale
+      let offset = cameraPos - pos
+      if abs(offset.x) - imageSize.x / 2.0 <= halfScreenWidth
+        if abs(offset.y + (offset.y < 0.0 ? imageSize.y : 0.0)) <= halfScreenHeight
+          screenObjects |> emplace([[auto pos, image_idx, imageSize]])
 
   screenObjects |> sort() <| $ (lhs, rhs)
     return lhs.pos.y < rhs.pos.y
