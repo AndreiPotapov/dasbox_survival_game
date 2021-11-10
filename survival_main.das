@@ -24,14 +24,6 @@ var g_images : array<Image>
 var ecs_dt : float
 var ecs_time : float
 
-let INVALID_ENTITY_ID = [[decs::EntityId]]
-
-def operator ==(a, b: decs::EntityId implicit)
-  return a.id == b.id && a.generation == b.generation
-
-def operator !=(a, b: decs::EntityId implicit)
-  return a.id != b.id || a.generation != b.generation
-
 enum WorldObjectId : int
   hero_stand = 0
   hero_stand_flip = 1
